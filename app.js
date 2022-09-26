@@ -25,6 +25,7 @@
 
 let voteCount = 15;
 let productArray = [];
+let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu','dog-duck','dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntan', 'unicorn','water-can', 'wine-glass'];
 
 // ----------------DOM REFERENCES ----------------------------
 
@@ -54,33 +55,64 @@ function randomIndex() {
 function renderImage() {
   let imgOneIndex = randomIndex();
   let imgTwoIndex = randomIndex();
+  let imgThreeIndex = randomIndex();
 
-  while (imgOneIndex === imgTwoIndex) {
+  while (imgOneIndex === imgTwoIndex || imgOneIndex === imgThreeIndex || imgTwoIndex === imgThreeIndex) {
     imgTwoIndex = randomIndex();
+    imgThreeIndex = randomIndex();
   }
 
   imgOne.src = productArray[imgOneIndex].img;
-  imgTwo.src = productArray[imgOneIndex].img;
+  imgTwo.src = productArray[imgTwoIndex].img;
+  imgThreeIndex.src = productArray[imgThreeIndex].img;
+
+  imgOne.alt = productArray[imgOneIndex].name;
+  imgTwo.alt = productArray[imgTwoIndex].name;
+  imgThree.alt = productArray[imgThreeIndex].name;
+
+  productArray[imgOneIndex].views++;
+  productArray[imgTwoIndex].views++;
+  productArray[imgThreeIndex].views++;
 
 }
 
 // ---------------EVENT HANDLERS-------------------------------
 
+function containerHandler() {
+  let imageClicked = event.target.alt;
+  for (let i = 0; i < productArray.length; i++) {
+    if (imageClicked === productArray[i].name) {
+      productArray[i].clicks++;
+    }
+}
+voteCount--;
+renderImage();
+}
+
+function resultsHandler() {
+  if (voteCount === 0) {
+    let list = document.createElement('ul');
+    resultsContainer.appendChild(list);
+
+    for (let i=0; i<productArray.length; i++) {
+      let listElem = document.createElement('li');
+      listElem.textContent(`${productArray[i].name} was viewed ${productArray[u/i].views} times and received ${productArray[i].clicks} votes.`);
+      list.appendChild(listElem);
+  }
+}
+}
+
 
 
 // ---------------EXECUTABLE CODE-------------------------------
 
+imgContainer.addEventListener('click', containerHandler);
+resultsButton.addEventListener('click', resultsHandler);
 
 // -------------- OBJECT CREATION
 
+for (let name in nameArray) {
+  let prod = new Product(name);
+}
 
-// idea to loop through folder
-
-// const fs = require('fs')
-
-// const dir = '/Users/flavio/folder'
-// const files = fs.readdirSync(dir)
-
-// for (const file of files) {
-//   console.log(file)
-// }
+let prod2 = new Product('sweep','png');
