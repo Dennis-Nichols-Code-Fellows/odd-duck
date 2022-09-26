@@ -1,43 +1,27 @@
-// need a constructor to build goat instances
-
-    // The goat needs to have
-
-    //  imgs, clicks, views names
-
-    // prototype methods to calculate views and clicks
-
-
-// need an array of goat objects
-
-// need function that randomly decides which goats to display, but also doesn't consecutively display goats
-
-// need render functions to display the goats
-
-// need DOM windows
-
-// need an event listener on the objects
-
-// need an event listener on the results button to render a list of the votes
 
 'use strict';
 
 // ---------------GLOBAL VARIABLES--------------------------------
 
-let voteCount = 15;
+let voteCount = 25;
 let productArray = [];
-let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu','dog-duck','dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntan', 'unicorn','water-can', 'wine-glass'];
+let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 
 // ----------------DOM REFERENCES ----------------------------
 
 let imgContainer = document.getElementById('img-container');
 let imgOne = document.getElementById('img-one');
 let imgTwo = document.getElementById('img-two');
+let imgThree = document.getElementById('img-three');
 let resultsButton = document.getElementById('results-button');
 let resultsContainer = document.getElementById('results-container');
+let list = document.getElementById('list');
+let pending = document.getElementById('pending');
+
 
 // --------------CONSTRUCTOR--------------------------------------
 
-function Product(name, fileExtension = 'jpg')  {
+function Product(name, fileExtension = 'jpg') {
   this.name = name;
   this.img = `img/${name}.${fileExtension}`;
   this.views = 0;
@@ -64,7 +48,7 @@ function renderImage() {
 
   imgOne.src = productArray[imgOneIndex].img;
   imgTwo.src = productArray[imgTwoIndex].img;
-  imgThreeIndex.src = productArray[imgThreeIndex].img;
+  imgThree.src = productArray[imgThreeIndex].img;
 
   imgOne.alt = productArray[imgOneIndex].name;
   imgTwo.alt = productArray[imgTwoIndex].name;
@@ -76,6 +60,16 @@ function renderImage() {
 
 }
 
+function resultsMessage() {
+  let main = document.getElementById('main');
+  let messageContainer = document.createElement('section');
+  main.appendChild(messageContainer);
+  let message = document.createElement('h2');
+  message.textContent = 'The People Have Spoken!';
+  messageContainer.appendChild(message);
+  messageContainer.style.gridArea = 'sidebar';
+}
+
 // ---------------EVENT HANDLERS-------------------------------
 
 function containerHandler() {
@@ -84,22 +78,31 @@ function containerHandler() {
     if (imageClicked === productArray[i].name) {
       productArray[i].clicks++;
     }
-}
-voteCount--;
-renderImage();
+  }
+  voteCount--;
+  console.log(voteCount);
+  renderImage();
+  if (voteCount > 0) {
+    pending.textContent = `${voteCount} more votes needed to get results`;
+    resultsButton.style.display = 'none';
+  }
+  else {
+    pending.style.display = 'none';
+    resultsButton.style.display = 'block';
+    imgContainer.style.display = 'none';
+    resultsContainer.style.gridArea = 'content';
+    resultsMessage();
+  }
 }
 
 function resultsHandler() {
-  if (voteCount === 0) {
-    let list = document.createElement('ul');
-    resultsContainer.appendChild(list);
-
-    for (let i=0; i<productArray.length; i++) {
+  if (voteCount <= 0) {
+    for (let i = 0; i < productArray.length; i++) {
       let listElem = document.createElement('li');
-      listElem.textContent(`${productArray[i].name} was viewed ${productArray[u/i].views} times and received ${productArray[i].clicks} votes.`);
+      listElem.textContent = `${productArray[i].name} was viewed ${productArray[i].views} times and received ${productArray[i].clicks} votes.`;
       list.appendChild(listElem);
+    }
   }
-}
 }
 
 
@@ -111,8 +114,18 @@ resultsButton.addEventListener('click', resultsHandler);
 
 // -------------- OBJECT CREATION
 
-for (let name in nameArray) {
-  let prod = new Product(name);
+for (let i = 0; i < nameArray.length; i++) {
+  let prod = new Product(nameArray[i]);
 }
 
-let prod2 = new Product('sweep','png');
+let prod2 = new Product('sweep', 'png');
+
+// Results zone messages
+pending.textContent = `${voteCount} more votes needed to get results`;
+resultsButton.style.display = 'none';
+
+// Starting image display
+renderImage();
+
+
+

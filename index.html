@@ -5,27 +5,35 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Odd Duck Product Vote</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-  <h1>Product votes</h1>
+  <main id="main">
+    <header>
+      <h1>Odd Duck Product Poll</h1>
+      <p><span>Welcome to the Odd Duck new product poll!</span>  <br> We want to know what you think is the ideal next product for our company to develop. <br> <span>Instructions:</span> Vote in the poll below by <em>clicking on the picture</em> of which product you prefer. Once you have voted in the poll at <em>least 25 times</em>, you can view the poll results by clicking on the button below.
+    </header>
 
-  <main>
-      <section id="img-container">
-        <img id = "img-one" src="" alt="">
-        <img id= 'img-two' src="" alt="">
-      </section>
-      <div id="results-container">
-        <button id="results-button"></button>
-      </div>
+    <section id='img-container'>
+      <img id='img-one' src="" alt="">
+      <img id='img-two' src="" alt="">
+      <img id='img-three' src="" alt="">
+    </section>
+
+    <div id="results-container">
+      <ul id =list></ul>
+      <p id ='pending'></p>
+      <button id="results-button">Get Results</button>
+    </div>
+
+    <footer>
+      <p>&copy; Odd Duck LLC, 2022</p>
+    </footer>
   </main>
-
-  <footer>
-
-  </footer>
-
 
 </body>
 <script src="app.js"></script>
