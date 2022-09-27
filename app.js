@@ -3,7 +3,7 @@
 
 // ---------------GLOBAL VARIABLES / settings--------------------------------
 
-let voteCount = 25;
+let voteCount = 3;
 let productArray = [];
 let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 let recentArray = [];
@@ -121,8 +121,6 @@ function containerHandler() {
   if (voteCount > 0) {
     pending.textContent = `${voteCount} more votes needed to get results`;
     resultDisplay.style.display = 'none';
-    // resultsContainer.style.display = 'none';
-    // resultsButton.style.display = 'none';
   }
   else {
     pending.style.display = 'none';
@@ -131,7 +129,7 @@ function containerHandler() {
     resultsContainer.style.gridArea = 'content';
     resultDisplay.style.display = 'block';
     resultsMessage();
-    renderChart();
+    
   }
 
   let subArr = [];
@@ -141,7 +139,7 @@ function containerHandler() {
   console.log(subArr);
   dataArr = subArr;
   console.log(dataArr, subArr);
-
+  renderChart();
 }
 
 // function resultsHandler() {
@@ -217,7 +215,8 @@ const renderChart = () => {
         y: {
           beginAtZero: true
         }
-      }
+      },
+      responsive: true
     }
   });
 };
