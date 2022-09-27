@@ -1,13 +1,19 @@
 
 'use strict';
 
-// ---------------GLOBAL VARIABLES--------------------------------
+// ---------------GLOBAL VARIABLES / settings--------------------------------
 
 let voteCount = 25;
 let productArray = [];
 let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 let recentArray = [];
+let resultDisplay = document.getElementById('resultChart');
+let resultChart = document.getElementById('resultChart').getContext('2d');
 
+//Chart variables
+let dataArr = [];
+
+resultDisplay.style.display = 'none';
 // ----------------DOM REFERENCES ----------------------------
 
 let imgContainer = document.getElementById('img-container');
@@ -114,34 +120,47 @@ function containerHandler() {
   renderImage();
   if (voteCount > 0) {
     pending.textContent = `${voteCount} more votes needed to get results`;
-    resultsButton.style.display = 'none';
+    resultDisplay.style.display = 'none';
+    // resultsContainer.style.display = 'none';
+    // resultsButton.style.display = 'none';
   }
   else {
     pending.style.display = 'none';
-    resultsButton.style.display = 'block';
+    // resultsButton.style.display = 'block';
     imgContainer.style.display = 'none';
     resultsContainer.style.gridArea = 'content';
+    resultDisplay.style.display = 'block';
     resultsMessage();
+    renderChart();
   }
+
+  let subArr = [];
+  for (let i = 0; i < productArray.length; i++) {
+    subArr.push(productArray[i].clicks);
+  }
+  console.log(subArr);
+  dataArr = subArr;
+  console.log(dataArr, subArr);
+
 }
 
-function resultsHandler() {
-  if (voteCount <= 0) {
-    for (let i = 0; i < productArray.length; i++) {
-      let listElem = document.createElement('li');
-      listElem.textContent = `${productArray[i].name} was viewed ${productArray[i].views} times and received ${productArray[i].clicks} votes.`;
-      list.appendChild(listElem);
-    }
-    resultsButton.removeEventListener('click', resultsHandler);
-  }
-}
+// function resultsHandler() {
+//   if (voteCount <= 0) {
+//     for (let i = 0; i < productArray.length; i++) {
+//       let listElem = document.createElement('li');
+//       listElem.textContent = `${productArray[i].name} was viewed ${productArray[i].views} times and received ${productArray[i].clicks} votes.`;
+//       list.appendChild(listElem);
+//     }
+//     resultsButton.removeEventListener('click', resultsHandler);
+//   }
+// }
 
 
 
 // ---------------EXECUTABLE CODE-------------------------------
 
 imgContainer.addEventListener('click', containerHandler);
-resultsButton.addEventListener('click', resultsHandler);
+// resultsButton.addEventListener('click', resultsHandler);
 
 // -------------- OBJECT CREATION
 
@@ -152,11 +171,54 @@ for (let i = 0; i < nameArray.length; i++) {
 let prod2 = new Product('sweep', 'png');
 
 // Results zone messages
+
 pending.textContent = `${voteCount} more votes needed to get results`;
-resultsButton.style.display = 'none';
 
 // Starting image display
 renderImage();
 
+// Chart code which hoists up to run in the click handler
+const renderChart = () => {
+  let labelsArr = [];
+  for (let i = 0; i < productArray.length; i++) {
+    labelsArr.push(productArray[i].name);
+  }
 
+  console.log('renderChart');
+  const ctx = document.getElementById('resultChart').getContext('2d');
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labelsArr,
+      datasets: [{
+        label: '# of Votes',
+        data: dataArr,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54[0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0], 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+};
 
