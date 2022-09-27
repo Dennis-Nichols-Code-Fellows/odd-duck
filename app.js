@@ -3,7 +3,7 @@
 
 // ---------------GLOBAL VARIABLES / settings--------------------------------
 
-let voteCount = 3;
+let voteCount = 25;
 let productArray = [];
 let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 let recentArray = [];
