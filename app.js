@@ -102,6 +102,7 @@ function resultsHandler() {
       listElem.textContent = `${productArray[i].name} was viewed ${productArray[i].views} times and received ${productArray[i].clicks} votes.`;
       list.appendChild(listElem);
     }
+    resultsButton.removeEventListener('click',resultsHandler);
   }
 }
 
