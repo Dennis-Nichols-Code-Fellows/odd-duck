@@ -6,6 +6,7 @@
 let voteCount = 25;
 let productArray = [];
 let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
+let recentArray = [];
 
 // ----------------DOM REFERENCES ----------------------------
 
@@ -32,20 +33,49 @@ function Product(name, fileExtension = 'jpg') {
 
 // ---------------HELPER FUNCTIONS-----------------------------
 
+// modified random number generator to pick from filtered array length below
 function randomIndex() {
-  return Math.floor(Math.random() * productArray.length)
+  return Math.floor(Math.random() * (productArray.length - 3));
 }
 
 function renderImage() {
-  let imgOneIndex = randomIndex();
-  let imgTwoIndex = randomIndex();
-  let imgThreeIndex = randomIndex();
+  //makes temporary array of numbers to use as indexes
+  let currentArray = [];
+  for (let i = 0; i < productArray.length; i++) {
+    currentArray.push(i);
+  }
+  // filters the indexes of the last three pictures out and gives new filtered array
+  let filtered = currentArray.filter(function (value, index, arr) {
+    return !(recentArray.includes(value));
+  });
 
+  //randomly pick new image indexes from the filtered array, prevents repeats
+  let imgOneIndex = filtered[randomIndex()];
+  let imgTwoIndex = filtered[randomIndex()];
+  let imgThreeIndex = filtered[randomIndex()];
+
+  //logging code to track correct function
+  console.log(currentArray);
+  console.log(recentArray);
+  console.log(filtered);
+
+  //loop to prevent dupliicate images
   while (imgOneIndex === imgTwoIndex || imgOneIndex === imgThreeIndex || imgTwoIndex === imgThreeIndex) {
-    imgTwoIndex = randomIndex();
-    imgThreeIndex = randomIndex();
+    imgTwoIndex = filtered[randomIndex()];
+    imgThreeIndex = filtered[randomIndex()];
   }
 
+  //remove indexes of previous set of images
+  recentArray.pop();
+  recentArray.pop();
+  recentArray.pop();
+
+  //add indexes of this set of images
+  recentArray.push(imgOneIndex);
+  recentArray.push(imgTwoIndex);
+  recentArray.push(imgThreeIndex);
+
+  //set image source and alt based on current set of indexes
   imgOne.src = productArray[imgOneIndex].img;
   imgTwo.src = productArray[imgTwoIndex].img;
   imgThree.src = productArray[imgThreeIndex].img;
@@ -102,7 +132,7 @@ function resultsHandler() {
       listElem.textContent = `${productArray[i].name} was viewed ${productArray[i].views} times and received ${productArray[i].clicks} votes.`;
       list.appendChild(listElem);
     }
-    resultsButton.removeEventListener('click',resultsHandler);
+    resultsButton.removeEventListener('click', resultsHandler);
   }
 }
 
