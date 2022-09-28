@@ -60,11 +60,6 @@ function renderImage() {
   let imgTwoIndex = filtered[randomIndex()];
   let imgThreeIndex = filtered[randomIndex()];
 
-  //logging code to track correct function
-  console.log(currentArray);
-  console.log(recentArray);
-  console.log(filtered);
-
   //loop to prevent dupliicate images
   while (imgOneIndex === imgTwoIndex || imgOneIndex === imgThreeIndex || imgTwoIndex === imgThreeIndex) {
     imgTwoIndex = filtered[randomIndex()];
@@ -103,8 +98,25 @@ function resultsMessage() {
   let message = document.createElement('h2');
   message.textContent = 'The People Have Spoken!';
   messageContainer.appendChild(message);
+  // new code to track cumulative votes across visits
+  let votes = 0;
+  productArray.forEach(product => {
+    votes += product.clicks;
+  });
+  let votesDisplay = document.createElement('p');
+  votesDisplay.innerHTML = `There have been <span style = 'font-weight: 700'>${votes} votes</span> so far.`;
+  messageContainer.appendChild(votesDisplay);
   messageContainer.style.gridArea = 'sidebar';
 }
+
+function createNewProducts() {
+  for (let i = 0; i < nameArray.length; i++) {
+    let prod = new Product(nameArray[i]);
+  }
+
+  let prod2 = new Product('sweep', 'png');
+}
+
 
 // ---------------EVENT HANDLERS-------------------------------
 
@@ -129,7 +141,6 @@ function containerHandler() {
     resultsContainer.style.gridArea = 'content';
     resultDisplay.style.display = 'block';
     resultsMessage();
-    
   }
 
   let subArr = [];
@@ -138,35 +149,26 @@ function containerHandler() {
   }
   console.log(subArr);
   dataArr = subArr;
-  console.log(dataArr, subArr);
+  dataArr.sort();
   renderChart();
+  localStorage.setItem('previous-objects', JSON.stringify(productArray));
 }
-
-// function resultsHandler() {
-//   if (voteCount <= 0) {
-//     for (let i = 0; i < productArray.length; i++) {
-//       let listElem = document.createElement('li');
-//       listElem.textContent = `${productArray[i].name} was viewed ${productArray[i].views} times and received ${productArray[i].clicks} votes.`;
-//       list.appendChild(listElem);
-//     }
-//     resultsButton.removeEventListener('click', resultsHandler);
-//   }
-// }
-
 
 
 // ---------------EXECUTABLE CODE-------------------------------
 
 imgContainer.addEventListener('click', containerHandler);
-// resultsButton.addEventListener('click', resultsHandler);
+
 
 // -------------- OBJECT CREATION
 
-for (let i = 0; i < nameArray.length; i++) {
-  let prod = new Product(nameArray[i]);
-}
 
-let prod2 = new Product('sweep', 'png');
+if (JSON.parse(localStorage.getItem('previous-objects')) !== null) {
+  productArray = JSON.parse(localStorage.getItem('previous-objects'));
+}
+else {
+  createNewProducts();
+}
 
 // Results zone messages
 
@@ -184,12 +186,15 @@ const renderChart = () => {
 
   console.log('renderChart');
   const ctx = document.getElementById('resultChart').getContext('2d');
+
   const myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'horizontalBar',
     data: {
       labels: labelsArr,
       datasets: [{
         label: '# of Votes',
+        axis: 'y',
+        fill: true,
         data: dataArr,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
@@ -211,12 +216,15 @@ const renderChart = () => {
       }]
     },
     options: {
+      tooltips: {
+        enabled: false
+      },
+      indexAxis: 'y',
       scales: {
         y: {
           beginAtZero: true
         }
-      },
-      responsive: true
+      }
     }
   });
 };
