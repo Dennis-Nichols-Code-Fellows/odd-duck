@@ -3,7 +3,7 @@
 
 // ---------------GLOBAL VARIABLES / settings--------------------------------
 
-let voteCount = 25;
+let voteCount = 5;
 let productArray = [];
 let nameArray = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 let recentArray = [];
@@ -11,7 +11,8 @@ let resultDisplay = document.getElementById('resultChart');
 let resultChart = document.getElementById('resultChart').getContext('2d');
 
 //Chart variables
-let dataArr = [];
+let clickArr = [];
+let viewArr = [];
 
 resultDisplay.style.display = 'none';
 // ----------------DOM REFERENCES ----------------------------
@@ -143,13 +144,21 @@ function containerHandler() {
     resultsMessage();
   }
 
-  let subArr = [];
+  let intClicks = [];
   for (let i = 0; i < productArray.length; i++) {
-    subArr.push(productArray[i].clicks);
+    intClicks.push(productArray[i].clicks);
   }
-  console.log(subArr);
-  dataArr = subArr;
-  dataArr.sort();
+
+  let intViews = [];
+  for (let i = 0; i < productArray.length; i++) {
+    intViews.push(productArray[i].views);
+  }
+
+
+  clickArr = intClicks;
+  clickArr.sort();
+  viewArr = intViews;
+  viewArr.sort();
   renderChart();
   localStorage.setItem('previous-objects', JSON.stringify(productArray));
 }
@@ -195,37 +204,31 @@ const renderChart = () => {
         label: '# of Votes',
         axis: 'y',
         fill: true,
-        data: dataArr,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54[0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0], 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      tooltips: {
-        enabled: false
+        data: clickArr,
+        backgroundColor:
+          'rgb(255, 0, 0)'
+
       },
-      indexAxis: 'y',
-      scales: {
-        y: {
-          beginAtZero: true
+      {
+        label: '# of Views',
+        axis: 'y',
+        fill: true,
+        data: viewArr,
+        backgroundColor:
+          'rgba(0, 0, 255,0.4)',
+
+      }],
+      options: {
+        tooltips: {
+          enabled: false
+        },
+        indexAxis: 'y',
+        scales: {
+          y: {
+            beginAtZero: true
+          }
         }
       }
-    }
+    },
   });
 };
-
